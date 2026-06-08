@@ -1,14 +1,6 @@
 import pygame
-from defs import * 
+from defs import *
 pygame.init()
-
-#Da set no tamanho da tela e tbm o nome do game
-tela = pygame.display.set_mode((1280 , 720))
-pygame.display.set_caption("Python Game")
-
-
-rodando = True
-
 #jogador
 player_x = 100
 player_y = 500
@@ -20,44 +12,70 @@ gravidade = 0.7
 forca_pulo = -15
 
 #Chao
-
 chao_y = 600
 
-player_sprite = carregarSprite("player.png", 2)
+#Da set no tamanho da tela e tbm o nome do game
+tela = pygame.display.set_mode((1280 , 720))
+pygame.display.set_caption("Python Game")
+
+
+rodando = True
+obj_ativo = True #isso faz com que futuramente, todos o objs morram, ent tem que ver isso
+#talvez usar dicionario, ia ser bom, porem longo
+#Carregar Sprites
+
+player = Player(
+    player_x,
+    player_y,
+    carregarSprite("player.png", 2)
+)
+kill_sprite = carregarSprite("bloco.png", 4)
+
+#x horizontal
 #faz fechar
 while rodando:
+    tela.fill((80,80,80))
+    pygame.draw.rect(tela, (100, 65, 154), (0, chao_y, 1280, 120))
+    player_col = player.sprite.get_rect(
+    topleft=(player.x, player.y)
+)
+    player.desenhar(tela)
 
     for evento in pygame.event.get():
-        if evento.type == pygame.QUIT:
-            rodando = False
+            if evento.type == pygame.QUIT:
+                rodando = False
 
-        if evento.type == pygame.KEYDOWN:
-            if evento.key == pygame.K_SPACE:
-                # Só pula se estiver no chão
-                if player_y + player_altura >= chao_y:
-                    vely = forca_pulo
-    
-    
+            if evento.type == pygame.KEYDOWN:
+                if evento.key == pygame.K_w:
+                    # Só pula se estiver no chão
+                    if player_y + player_altura >= chao_y:
+                        vely = forca_pulo
+
     vely += gravidade
     player_y += vely
-    if player_y + player_altura >= chao_y:
-        player_y = chao_y - player_altura
+    if player.y + player_altura >= chao_y:
+        player.y = chao_y - player_altura
         vely = 0
-
 
     tecla = pygame.key.get_pressed()
     if tecla[pygame.K_a]:
-        player_x -= 5
+        player.x -= 5
     if tecla[pygame.K_d]:
-        player_x += 5
+         player.x += 5
     
-    
-    tela.fill((0,0,0))
-    pygame.draw.rect(tela, (100, 65, 154), (0, chao_y, 1280, 120))
-    tela.blit(player_sprite,(player_x,player_y))
 
+
+    if obj_ativo == True:
+        object = pygame.Rect(500, 550, 64, 64)
+        tela.blit(kill_sprite,(500,550), object)
+        print(kill_sprite)
+
+        if player_col.colliderect(object):
+            print("HIT!")
+            obj_ativo = False
+    
+
+   
     pygame.display.update()
-
-
-
 pygame.quit()
+
