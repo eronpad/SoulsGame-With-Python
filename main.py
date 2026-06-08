@@ -1,9 +1,11 @@
 import pygame
+from defs import * 
 pygame.init()
 
 #Da set no tamanho da tela e tbm o nome do game
 tela = pygame.display.set_mode((1280 , 720))
 pygame.display.set_caption("Python Game")
+
 
 rodando = True
 
@@ -21,7 +23,7 @@ forca_pulo = -15
 
 chao_y = 600
 
-
+player_sprite = carregarSprite("player.png", 2)
 #faz fechar
 while rodando:
 
@@ -52,17 +54,10 @@ while rodando:
     
     tela.fill((0,0,0))
     pygame.draw.rect(tela, (100, 65, 154), (0, chao_y, 1280, 120))
-    pygame.draw.rect(tela, 
-                     (255, 0, 0), 
-                     (player_x, player_y, 
-                      player_largura, player_altura)
-    )
+    tela.blit(player_sprite,(player_x,player_y))
 
     pygame.display.update()
 
 
 
 pygame.quit()
-
-def Sprite():
-    pass
